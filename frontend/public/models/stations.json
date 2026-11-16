@@ -1,0 +1,300 @@
+{
+  "source": "Turbofan Engine by Xieyn (Sketchfab, Sketchfab Standard license)",
+  "axis": "x",
+  "stations": {
+    "fan": {
+      "x0": -0.0899,
+      "x1": 0.145,
+      "parts": 5,
+      "cx": 0.0275
+    },
+    "lpc": {
+      "x0": 0.06,
+      "x1": 0.26,
+      "parts": 4,
+      "cx": 0.16
+    },
+    "shaft": {
+      "x0": 0.145,
+      "x1": 0.798,
+      "parts": 2,
+      "cx": 0.4715
+    },
+    "nozzle": {
+      "x0": 0.798,
+      "x1": 1.223,
+      "parts": 3,
+      "cx": 1.0105
+    },
+    "hpc": {
+      "x0": 0.2,
+      "x1": 0.38,
+      "parts": 5,
+      "cx": 0.29
+    },
+    "hpt": {
+      "x0": 0.5475,
+      "x1": 0.62,
+      "parts": 2,
+      "cx": 0.5837
+    },
+    "lpt": {
+      "x0": 0.5475,
+      "x1": 0.798,
+      "parts": 5,
+      "cx": 0.6727
+    },
+    "combustor": {
+      "x0": 0.379,
+      "x1": 0.5475,
+      "parts": 3,
+      "cx": 0.4632
+    }
+  },
+  "parts": [
+    {
+      "node": "fan__Primary_Turbine_Bushing",
+      "station": "fan",
+      "part": "Primary_Turbine_Bushing",
+      "x0": -0.085,
+      "x1": 0.085,
+      "dia": 0.12
+    },
+    {
+      "node": "fan__Nose_Cone",
+      "station": "fan",
+      "part": "Nose Cone",
+      "x0": 0.065,
+      "x1": 0.145,
+      "dia": 0.11
+    },
+    {
+      "node": "lpc__Bearing_One",
+      "station": "lpc",
+      "part": "Bearing_One",
+      "x0": 0.099,
+      "x1": 0.129,
+      "dia": 0.084
+    },
+    {
+      "node": "shaft__Central_Mounting_Shaft",
+      "station": "shaft",
+      "part": "Central_Mounting_Shaft",
+      "x0": 0.145,
+      "x1": 0.545,
+      "dia": 0.144
+    },
+    {
+      "node": "shaft__Rear_Mounting_Shaft",
+      "station": "shaft",
+      "part": "Rear_Mounting_Shaft",
+      "x0": 0.545,
+      "x1": 0.798,
+      "dia": 0.2398
+    },
+    {
+      "node": "nozzle__Rear_Case",
+      "station": "nozzle",
+      "part": "Rear_Case",
+      "x0": 0.798,
+      "x1": 0.918,
+      "dia": 0.4272
+    },
+    {
+      "node": "nozzle__End_Cone",
+      "station": "nozzle",
+      "part": "End_Cone",
+      "x0": 0.918,
+      "x1": 1.223,
+      "dia": 0.2398
+    },
+    {
+      "node": "nozzle__Exhaust_Case",
+      "station": "nozzle",
+      "part": "Exhaust_Case",
+      "x0": 0.918,
+      "x1": 1.073,
+      "dia": 0.4599
+    },
+    {
+      "node": "fan__Primary_Turbine",
+      "station": "fan",
+      "part": "Primary_Turbine",
+      "x0": 0.015,
+      "x1": 0.065,
+      "dia": 0.4712
+    },
+    {
+      "node": "lpc__Air_Turbine_One",
+      "station": "lpc",
+      "part": "Air_Turbine_One",
+      "x0": 0.2,
+      "x1": 0.22,
+      "dia": 0.201
+    },
+    {
+      "node": "lpc__Air_Turbine_Two",
+      "station": "lpc",
+      "part": "Air_Turbine_Two",
+      "x0": 0.24,
+      "x1": 0.26,
+      "dia": 0.196
+    },
+    {
+      "node": "hpc__Air_Turbine_Three",
+      "station": "hpc",
+      "part": "Air_Turbine_Three",
+      "x0": 0.28,
+      "x1": 0.3,
+      "dia": 0.1911
+    },
+    {
+      "node": "hpc__Air_Turbine_Four",
+      "station": "hpc",
+      "part": "Air_Turbine_Four",
+      "x0": 0.32,
+      "x1": 0.34,
+      "dia": 0.1861
+    },
+    {
+      "node": "hpc__Air_Turbine_Five",
+      "station": "hpc",
+      "part": "Air_Turbine_Five",
+      "x0": 0.36,
+      "x1": 0.38,
+      "dia": 0.1811
+    },
+    {
+      "node": "hpt__Petrol_Turbine_One",
+      "station": "hpt",
+      "part": "Petrol_Turbine_One",
+      "x0": 0.5475,
+      "x1": 0.5675,
+      "dia": 0.1712
+    },
+    {
+      "node": "hpt__Petrol_Turbine_Two",
+      "station": "hpt",
+      "part": "Petrol_Turbine_Two",
+      "x0": 0.6,
+      "x1": 0.62,
+      "dia": 0.194
+    },
+    {
+      "node": "lpt__Petrol_Turbine_Three",
+      "station": "lpt",
+      "part": "Petrol_Turbine_Three",
+      "x0": 0.655,
+      "x1": 0.675,
+      "dia": 0.2759
+    },
+    {
+      "node": "lpt__Petrol_Turbine_Four",
+      "station": "lpt",
+      "part": "Petrol_Turbine_Four",
+      "x0": 0.717,
+      "x1": 0.737,
+      "dia": 0.3333
+    },
+    {
+      "node": "lpt__Petrol_Turbine_Five",
+      "station": "lpt",
+      "part": "Petrol_Turbine_Five",
+      "x0": 0.775,
+      "x1": 0.795,
+      "dia": 0.3451
+    },
+    {
+      "node": "hpc__Air_Turbine_Bracket",
+      "station": "hpc",
+      "part": "Air_Turbine_Bracket",
+      "x0": 0.22,
+      "x1": 0.36,
+      "dia": 0.2065
+    },
+    {
+      "node": "combustor__Petrol_Intake_Bracket",
+      "station": "combustor",
+      "part": "Petrol_Intake_Bracket",
+      "x0": 0.38,
+      "x1": 0.5475,
+      "dia": 0.1958
+    },
+    {
+      "node": "lpt__Petrol_Turbine_Bracket",
+      "station": "lpt",
+      "part": "Petrol_Turbine_Bracket",
+      "x0": 0.6218,
+      "x1": 0.773,
+      "dia": 0.3583
+    },
+    {
+      "node": "fan__Primary_Turbine_Case",
+      "station": "fan",
+      "part": "Primary_Turbine_Case",
+      "x0": -0.07,
+      "x1": 0.06,
+      "dia": 0.5386
+    },
+    {
+      "node": "lpc__Bearing_Case",
+      "station": "lpc",
+      "part": "Bearing_Case",
+      "x0": 0.06,
+      "x1": 0.2,
+      "dia": 0.5386
+    },
+    {
+      "node": "hpc__Air_Turbine_Case",
+      "station": "hpc",
+      "part": "Air_Turbine_Case",
+      "x0": 0.2,
+      "x1": 0.379,
+      "dia": 0.2698
+    },
+    {
+      "node": "combustor__Petrol_Intake_Case",
+      "station": "combustor",
+      "part": "Petrol_Intake_Case",
+      "x0": 0.379,
+      "x1": 0.5475,
+      "dia": 0.2591
+    },
+    {
+      "node": "lpt__Petrol_Turbine_Case",
+      "station": "lpt",
+      "part": "Petrol_Turbine_Case",
+      "x0": 0.5475,
+      "x1": 0.798,
+      "dia": 0.4272
+    },
+    {
+      "node": "combustor__Pipe_Array",
+      "station": "combustor",
+      "part": "Pipe_Array",
+      "x0": 0.4321,
+      "x1": 0.481,
+      "dia": 0.2089
+    },
+    {
+      "node": "fan__Front_Rim",
+      "station": "fan",
+      "part": "Front_Rim",
+      "x0": -0.0899,
+      "x1": -0.07,
+      "dia": 0.5588
+    }
+  ],
+  "bounds": {
+    "min": [
+      -0.0899,
+      -0.2794,
+      -0.2794
+    ],
+    "max": [
+      1.223,
+      0.2794,
+      0.2794
+    ]
+  }
+}

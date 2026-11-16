@@ -1,0 +1,8 @@
+data/raw
+data/processed
+**/.venv
+**/node_modules
+**/.next
+frontend
+results/figures
+docs

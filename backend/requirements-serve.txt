@@ -1,0 +1,12 @@
+# VortexPHM-AI: slim serving image (no PyTorch, SHAP or matplotlib)
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+pydantic>=2.8.0
+sqlalchemy>=2.0.30
+numpy>=1.26.0
+pandas>=2.2.0
+pyarrow>=16.0.0
+scikit-learn>=1.5.0
+xgboost>=2.1.0
+joblib>=1.4.0
+psycopg[binary]>=3.2.0  # PostgreSQL audit log (optional)

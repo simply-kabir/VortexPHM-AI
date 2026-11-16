@@ -1,0 +1,119 @@
+{
+  "baseline_fixed_3sigma": {
+    "far_cycle": 0.0,
+    "far_engine": 0.0,
+    "detection_rate": 0.7142857142857143,
+    "median_lead_detected": 5.0,
+    "share_lead_ge_35": 0.0,
+    "median_lead_pct_of_life": 0.05555555555555555,
+    "drift_detection_rate": 0.21428571428571427
+  },
+  "baseline_calibrated": {
+    "far_cycle": 0.005442176870748299,
+    "far_engine": 0.09523809523809523,
+    "detection_rate": 1.0,
+    "median_lead_detected": 12.0,
+    "share_lead_ge_35": 0.2857142857142857,
+    "median_lead_pct_of_life": 0.15254237288135594,
+    "drift_detection_rate": 0.35714285714285715
+  },
+  "isolation_forest": {
+    "far_cycle": 0.043210617580365485,
+    "far_engine": 0.14285714285714285,
+    "detection_rate": 0.8571428571428571,
+    "median_lead_detected": 23.0,
+    "share_lead_ge_35": 0.14285714285714285,
+    "median_lead_pct_of_life": 0.29539473684210527,
+    "drift_detection_rate": 0.35714285714285715
+  },
+  "calibration": {
+    "target_far": 0.01,
+    "oof_far_isolation_forest": 0.007151095732410612
+  },
+  "classifier": {
+    "classes": [
+      "NOMINAL",
+      "FAULT_HPT_THERMAL",
+      "FAULT_LPT",
+      "FAULT_SENSOR_DRIFT"
+    ],
+    "cv_macro_f1": [
+      0.7587093708399256,
+      0.9175664152329653,
+      0.6799261057500935
+    ],
+    "test_macro_f1": 0.5146060089273785,
+    "test_macro_precision": 0.5440047258515991,
+    "report": {
+      "NOMINAL": {
+        "precision": 0.8531073446327684,
+        "recall": 0.7568922305764411,
+        "f1-score": 0.8021248339973439,
+        "support": 399.0
+      },
+      "FAULT_HPT_THERMAL": {
+        "precision": 0.4270557029177719,
+        "recall": 0.7,
+        "f1-score": 0.5304777594728172,
+        "support": 230.0
+      },
+      "FAULT_LPT": {
+        "precision": 0.04,
+        "recall": 0.023809523809523808,
+        "f1-score": 0.029850746268656716,
+        "support": 126.0
+      },
+      "FAULT_SENSOR_DRIFT": {
+        "precision": 0.8558558558558559,
+        "recall": 0.5864197530864198,
+        "f1-score": 0.6959706959706959,
+        "support": 162.0
+      },
+      "accuracy": 0.6117775354416576,
+      "macro avg": {
+        "precision": 0.5440047258515991,
+        "recall": 0.5167803768680961,
+        "f1-score": 0.5146060089273785,
+        "support": 917.0
+      },
+      "weighted avg": {
+        "precision": 0.6350068602270564,
+        "recall": 0.6117775354416576,
+        "f1-score": 0.6091233808296529,
+        "support": 917.0
+      }
+    },
+    "confusion": [
+      [
+        302,
+        69,
+        12,
+        16
+      ],
+      [
+        17,
+        161,
+        52,
+        0
+      ],
+      [
+        16,
+        107,
+        3,
+        0
+      ],
+      [
+        19,
+        40,
+        8,
+        95
+      ]
+    ]
+  },
+  "rul": {
+    "rmse_all_cycles": 11.877729964871197,
+    "rmse_last_cycle": 5.666378653554138,
+    "nasa_score_last_cycle": 5.075633608598357,
+    "sigma_val": 10.301294593361389
+  }
+}

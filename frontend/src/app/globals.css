@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* .light re-applies the light palette to a subtree even when <html> carries .dark (used by the landing page) */
+:root, .light {
+  color-scheme: light;
+  --canvas: 245 249 246;   --surface: 255 255 255;  --elevated: 250 245 240;  --border: 234 226 218;
+  --fg: 15 23 42;          --fg-2: 71 85 105;       --fg-3: 100 116 139;
+  --brand: 194 65 12;      --brand-hover: 154 52 18; --on-brand: 255 255 255;  --brand-graphic: 234 88 12;
+  --ok: 4 120 87;         --ok-fill: 16 185 129;
+  --warn: 161 98 7;       --warn-fill: 234 179 8;    --on-warn: 66 32 6;
+  --crit: 185 28 28;      --crit-fill: 220 38 38;
+  --info: 3 105 161;      --info-fill: 14 165 233;
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.06), 0 4px 16px -4px rgb(15 23 42 / 0.08);
+}
+.dark {
+  color-scheme: dark; 
+  --canvas: 11 15 25;      --surface: 21 28 44;      --elevated: 30 41 59;      --border: 40 53 77;
+  --fg: 248 250 252;       --fg-2: 148 163 184;      --fg-3: 129 144 168;
+  --brand: 249 115 22;     --brand-hover: 251 146 60; --on-brand: 17 24 39;     --brand-graphic: 249 115 22;
+  --ok: 16 185 129;       --ok-fill: 16 185 129;
+  --warn: 234 179 8;      --warn-fill: 234 179 8;    --on-warn: 66 32 6;
+  --crit: 248 113 113;    --crit-fill: 239 68 68;
+  --info: 56 189 248;     --info-fill: 56 189 248;
+  --shadow-card: 0 0 0 1px rgb(40 53 77 / 0.6), 0 8px 24px -8px rgb(0 0 0 / 0.5);
+}
+html { background: rgb(var(--canvas)); color: rgb(var(--fg)); scroll-behavior: auto; }
+body { font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased; }
+.num { font-family: var(--font-geist-mono), ui-monospace, monospace; font-variant-numeric: tabular-nums; }
+*:focus-visible { outline: 2px solid rgb(var(--brand-graphic)); outline-offset: 2px; border-radius: 6px; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition-duration: 0.01ms !important; } }

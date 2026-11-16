@@ -1,0 +1,13 @@
+{
+  "name": "vortexphm-asset-tools",
+  "private": true,
+  "type": "module",
+  "scripts": { "model": "node process_model.mjs", "validate": "node validate_model.mjs" },
+  "dependencies": {
+    "@gltf-transform/core": "^4",
+    "@gltf-transform/extensions": "^4",
+    "@gltf-transform/functions": "^4",
+    "gltf-validator": "^2",
+    "meshoptimizer": "^0.2"
+  }
+}

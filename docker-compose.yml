@@ -1,0 +1,18 @@
+services:
+  api:
+    build: .
+    ports: ["8000:8000"]
+    environment:
+      CORS_ORIGINS: "http://localhost:3000"
+      AUDIT_DB: /data/audit.db
+    volumes: ["auditdata:/data"]
+  web:
+    image: node:20-alpine
+    working_dir: /app
+    volumes: ["./frontend:/app"]
+    command: sh -c "npm install && npm run dev"
+    environment:
+      NEXT_PUBLIC_API_URL: "http://localhost:8000/api/v1"
+    ports: ["3000:3000"]
+volumes:
+  auditdata: {}

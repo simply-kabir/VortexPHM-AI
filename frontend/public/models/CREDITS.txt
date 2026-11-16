@@ -1,0 +1,16 @@
+3D model: "Turbofan Engine" by Xieyn, from Sketchfab.
+Source file: turbofan_engine.zip (glTF), processed by VortexPHM-AI:
+  - parts grouped into stations (fan, lpc, hpc, combustor, hpt, lpt, nozzle, shaft)
+  - decimated (about 296k -> 110k triangles), single shared material, meshopt-compressed
+Original licence text (license.txt shipped with the model) is reproduced below.
+IMPORTANT: check the Sketchfab licence terms before publishing the processed file in a public repository
+or on a public website. Keep this credit with the file.
+
+Model Information:
+* title:	Turbofan Engine
+* source:	https://sketchfab.com/3d-models/turbofan-engine-f9d24abd03234d07bf773812b34af876
+* author:	Xieyn (https://sketchfab.com/xieyna)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

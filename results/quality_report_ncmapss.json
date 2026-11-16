@@ -1,0 +1,11 @@
+{
+  "completeness": 1.0,
+  "physics_violation_rate": {
+    "P2<P24": 0.0,
+    "T2<T24": 0.0,
+    "T24<T30": 0.0
+  },
+  "stuck_sensors": {},
+  "rows_checked": 1415908,
+  "passed": true
+}
