@@ -209,7 +209,7 @@ export default function ScrollEngine() {
                   {last && (
                     <div className="mt-5 flex flex-wrap gap-3">
                       <Link href="/fleet" className="rounded-control bg-brand px-5 py-2.5 text-sm font-medium text-brand-on transition-colors duration-fast hover:bg-brand-hover">Dive into analytics →</Link>
-                      <Link href="/viewer" className="rounded-control border border-line bg-surface px-5 py-2.5 text-sm font-medium transition-colors duration-fast hover:bg-elevated">Try the 3D engine</Link>
+                      <Link href="/models" className="rounded-control border border-line bg-surface px-5 py-2.5 text-sm font-medium transition-colors duration-fast hover:bg-elevated">Explore 3D Twin & Models</Link>
                     </div>
                   )}
                 </div>

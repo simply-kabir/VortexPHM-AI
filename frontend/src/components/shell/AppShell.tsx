@@ -7,7 +7,11 @@ import ThemeToggle from "./ThemeToggle";
 import ChainBadge from "@/components/audit/ChainBadge";
 import { getJSON, type AuditRow, type Chain, type FleetRow } from "@/lib/api";
 
-const NAV = [{ href: "/fleet", label: "Fleet" }, { href: "/viewer", label: "3D engine" }, { href: "/models", label: "Models" }, { href: "/audit", label: "Audit" }];
+const NAV = [
+  { href: "/fleet", label: "Fleet" },
+  { href: "/models", label: "3D Twin & Models" },
+  { href: "/audit", label: "Audit" },
+];
 
 type Bench = Record<string, { isolation_forest?: { far_cycle: number }; classifier?: { test_macro_f1: number } }>;
 
@@ -47,7 +51,10 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           <Link href="/" aria-label="Landing page"><Wordmark /></Link>
           <nav className="flex items-center gap-1 text-sm">
             {NAV.map((n) => {
-              const on = path === n.href || (n.href === "/fleet" && path.startsWith("/engine"));
+              const on =
+                path === n.href ||
+                (n.href === "/fleet" && path.startsWith("/engine")) ||
+                (n.href === "/models" && (path.startsWith("/models") || path === "/viewer"));
               return <Link key={n.href} href={n.href} className={`rounded-control px-3 py-1.5 transition-colors duration-fast ${on ? "bg-elevated text-fg" : "text-fg-2 hover:text-fg"}`}>{n.label}</Link>;
             })}
           </nav>

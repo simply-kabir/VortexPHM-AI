@@ -25,10 +25,12 @@ export function riskFromShap(shapBySensor: Record<string, number>): StationRisk 
 export const scaleRisk = (r: StationRisk, k: number): StationRisk =>
   Object.fromEntries(Object.entries(r).map(([id, v]) => [id, Math.max(0, Math.min(1, v * k))])) as StationRisk;
 
-/** Demo presets for the /viewer page (no backend needed). */
-export const PRESETS: { id: string; label: string; risk: StationRisk }[] = [
-  { id: "healthy", label: "Healthy", risk: zeroRisk() },
-  { id: "hpc", label: "HPC efficiency", risk: { ...zeroRisk(), hpc: 0.95, lpc: 0.15 } },
-  { id: "hpt", label: "HPT thermal", risk: { ...zeroRisk(), hpt: 0.9, combustor: 0.2 } },
-  { id: "fan", label: "Fan / LPC", risk: { ...zeroRisk(), fan: 0.75, lpc: 0.6 } },
+/** Demo presets for the Digital Twin & Models page. */
+export const PRESETS: { id: string; label: string; risk: StationRisk; faultClass?: string }[] = [
+  { id: "healthy", label: "Healthy (Nominal)", risk: zeroRisk(), faultClass: "NOMINAL" },
+  { id: "hpt", label: "HPT Thermal Distress", risk: { ...zeroRisk(), hpt: 0.95, combustor: 0.25 }, faultClass: "FAULT_HPT_THERMAL" },
+  { id: "lpt", label: "LPT Degradation", risk: { ...zeroRisk(), lpt: 0.9, hpt: 0.15 }, faultClass: "FAULT_LPT" },
+  { id: "drift", label: "Sensor Drift (T48/P25)", risk: { ...zeroRisk(), hpt: 0.6, hpc: 0.5 }, faultClass: "FAULT_SENSOR_DRIFT" },
+  { id: "hpc", label: "HPC Efficiency Drop", risk: { ...zeroRisk(), hpc: 0.95, lpc: 0.2 }, faultClass: "FAULT_HPC_EFFICIENCY" },
+  { id: "fan", label: "Fan / LPC Aerodynamic", risk: { ...zeroRisk(), fan: 0.85, lpc: 0.65 }, faultClass: "FAULT_FAN_LPC" },
 ];

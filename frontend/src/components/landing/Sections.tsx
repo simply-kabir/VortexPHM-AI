@@ -68,7 +68,7 @@ export default function Sections() {
         <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">Explore the engine, then the fleet.</h2>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
           <Link href="/fleet" className="rounded-control bg-brand px-6 py-2.5 text-sm font-medium text-brand-on transition-colors duration-fast hover:bg-brand-hover">Open fleet board</Link>
-          <Link href="/viewer" className="rounded-control border border-line bg-surface px-6 py-2.5 text-sm font-medium transition-colors duration-fast hover:bg-elevated">Try the 3D engine</Link>
+          <Link href="/models" className="rounded-control border border-line bg-surface px-6 py-2.5 text-sm font-medium transition-colors duration-fast hover:bg-elevated">Explore 3D Twin & Models</Link>
         </div>
       </section>
 
