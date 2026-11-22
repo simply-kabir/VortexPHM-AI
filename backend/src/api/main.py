@@ -95,10 +95,13 @@ async def replay(uid: str, speed: float = 0.3):
     if uid not in svc.by_uid:
         raise HTTPException(404, "unknown engine")
 
+    series = svc.diagnose_series(uid)
+
     async def gen():
-        for c in svc.cycles(uid):
-            yield f"data: {json.dumps(svc.diagnose(uid, c, with_explain=False))}\n\n"
-            await asyncio.sleep(speed)
+        for item in series:
+            yield f"data: {json.dumps(item)}\n\n"
+            if speed > 0:
+                await asyncio.sleep(speed)
         yield 'data: {"done": true}\n\n'
     return StreamingResponse(gen(), media_type="text/event-stream", headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
