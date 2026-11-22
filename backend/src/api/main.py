@@ -42,14 +42,7 @@ def health(): return {"status": "ok", "engines": len(svc.engines())}
 @api.get("/decision/triage-queue")
 def fleet(frac: float = 0.75):
     """Fleet snapshot at 'fleet time' = frac of each engine's life (UI slider)."""
-    rows = []
-    for uid in svc.engines():
-        cyc = svc.cycles(uid)
-        c = cyc[min(len(cyc) - 1, int(frac * len(cyc)))]
-        d = svc.diagnose(uid, c, with_explain=False)
-        rows.append(dict(engine_id=uid, cycle=c, fault_class=d["fault_class"], urgency=d["urgency"], rul=d["rul"], anomalous=d["is_anomalous"],
-                         cost=d["cost"], amm=d["amm"][:1]))
-    return sorted(rows, key=lambda r: -r["urgency"]["index"])
+    return svc.triage_queue(frac)
 
 
 @api.get("/fleet/available")

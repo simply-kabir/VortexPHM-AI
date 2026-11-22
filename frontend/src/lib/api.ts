@@ -30,7 +30,22 @@ async function parse<T>(r: Response): Promise<T> {
   if (!r.ok) throw new Error(`${r.status} ${await r.text()}`);
   return r.json() as Promise<T>;
 }
-export const getJSON = <T,>(path: string) => fetch(`${API}${path}`, { cache: "no-store" }).then((r) => parse<T>(r));
+
+const inFlight = new Map<string, Promise<any>>();
+
+export const getJSON = <T,>(path: string): Promise<T> => {
+  const url = `${API}${path}`;
+  if (inFlight.has(url)) {
+    return inFlight.get(url)! as Promise<T>;
+  }
+  const promise = fetch(url, { cache: "no-store" })
+    .then((r) => parse<T>(r))
+    .finally(() => {
+      setTimeout(() => inFlight.delete(url), 400);
+    });
+  inFlight.set(url, promise);
+  return promise;
+};
 export const postJSON = <T,>(path: string, body: unknown) =>
   fetch(`${API}${path}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }).then((r) => parse<T>(r));
 
