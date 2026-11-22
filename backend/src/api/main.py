@@ -7,7 +7,7 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from src.api import db
-from src.api.schemas import DecisionIn, DiagnoseIn
+from src.api.schemas import AddEngineIn, DecisionIn, DiagnoseIn
 from src.api.service import InferenceService
 from src.core.config import RESULTS
 
@@ -50,6 +50,36 @@ def fleet(frac: float = 0.75):
         rows.append(dict(engine_id=uid, cycle=c, fault_class=d["fault_class"], urgency=d["urgency"], rul=d["rul"], anomalous=d["is_anomalous"],
                          cost=d["cost"], amm=d["amm"][:1]))
     return sorted(rows, key=lambda r: -r["urgency"]["index"])
+
+
+@api.get("/fleet/available")
+def available_engines():
+    from src.core.config import PROC
+    import pandas as pd
+    proc_file = PROC / "ncmapss.parquet"
+    if not proc_file.exists():
+        return []
+    df = pd.read_parquet(proc_file, columns=["uid", "split", "fault_class", "is_virtual"])
+    active = set(svc.by_uid.keys())
+    summary = df.groupby(["uid", "split", "fault_class", "is_virtual"]).size().reset_index(name="cycles")
+    res = []
+    for _, r in summary.iterrows():
+        res.append(dict(uid=r["uid"], split=r["split"], fault_class=r["fault_class"],
+                        is_virtual=bool(r["is_virtual"]), cycles=int(r["cycles"]),
+                        active=r["uid"] in active))
+    return res
+
+
+@api.post("/fleet/add", status_code=201)
+def add_engine(body: AddEngineIn):
+    if body.tail_number:
+        return svc.synthesize_engine(tail_number=body.tail_number.strip().upper(), fault_class=body.fault_class or "FAULT_HPT_THERMAL")
+    elif body.uid:
+        try:
+            return svc.add_engine_from_dataset(body.uid.strip())
+        except KeyError:
+            raise HTTPException(404, f"Engine {body.uid} not found in dataset")
+    raise HTTPException(400, "Must provide either 'uid' or 'tail_number'")
 
 
 @api.post("/diagnostics/evaluate")

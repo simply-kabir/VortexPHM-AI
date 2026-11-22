@@ -13,3 +13,9 @@ class DecisionIn(BaseModel):
     action: Literal["ACCEPT", "OVERRIDE", "DEFER"]
     engineer_license: str = Field(pattern=r"^[A-Z0-9-]{6,20}$")
     justification: str = Field(min_length=50)
+
+
+class AddEngineIn(BaseModel):
+    uid: str | None = None
+    tail_number: str | None = None
+    fault_class: str | None = "FAULT_HPT_THERMAL"

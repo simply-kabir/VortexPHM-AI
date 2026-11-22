@@ -22,6 +22,56 @@ class InferenceService:
     def engines(self): return list(self.by_uid)
     def cycles(self, uid): return self.by_uid[uid]["cycle"].tolist()
 
+    def reload_fleet(self):
+        self.fleet = pd.read_parquet(SERVING / "fleet.parquet").sort_values(["uid", "cycle"]).reset_index(drop=True)
+        self.by_uid = {u: g.reset_index(drop=True) for u, g in self.fleet.groupby("uid")}
+
+    def add_engine_from_dataset(self, uid: str) -> dict:
+        from src.core.config import PROC
+        from src.data_pipeline.features import add_temporal_features
+
+        if uid in self.by_uid:
+            return {"status": "already_present", "uid": uid, "cycles": len(self.by_uid[uid])}
+
+        df = pd.read_parquet(PROC / "ncmapss.parquet")
+        engine_rows = df[df.uid == uid]
+        if engine_rows.empty:
+            raise KeyError(f"Engine {uid} not found in dataset")
+
+        z = [c for c in df.columns if c.endswith("_z")]
+        feats = add_temporal_features(engine_rows, z)
+
+        updated = pd.concat([self.fleet, feats], ignore_index=True)
+        try:
+            SERVING.mkdir(parents=True, exist_ok=True)
+            updated.sort_values(["uid", "cycle"]).to_parquet(SERVING / "fleet.parquet")
+        except Exception:
+            pass
+        self.fleet = updated.sort_values(["uid", "cycle"]).reset_index(drop=True)
+        self.by_uid = {u: g.reset_index(drop=True) for u, g in self.fleet.groupby("uid")}
+        return {"status": "added", "uid": uid, "cycles": len(engine_rows)}
+
+    def synthesize_engine(self, tail_number: str, fault_class: str = "FAULT_HPT_THERMAL", base_uid: str | None = None) -> dict:
+        tail = tail_number.strip().upper()
+        if tail in self.by_uid:
+            return {"status": "already_present", "uid": tail, "cycles": len(self.by_uid[tail])}
+
+        match = self.fleet[self.fleet.fault_class == fault_class]
+        base = base_uid if (base_uid and base_uid in self.by_uid) else (match.uid.iloc[0] if not match.empty else list(self.by_uid.keys())[0])
+
+        clone = self.by_uid[base].copy()
+        clone["uid"] = tail
+
+        updated = pd.concat([self.fleet, clone], ignore_index=True)
+        try:
+            SERVING.mkdir(parents=True, exist_ok=True)
+            updated.sort_values(["uid", "cycle"]).to_parquet(SERVING / "fleet.parquet")
+        except Exception:
+            pass
+        self.fleet = updated.sort_values(["uid", "cycle"]).reset_index(drop=True)
+        self.by_uid = {u: g.reset_index(drop=True) for u, g in self.fleet.groupby("uid")}
+        return {"status": "created", "uid": tail, "cycles": len(clone)}
+
     def diagnose(self, uid: str, cycle: int, with_explain: bool = True) -> dict:
         t0 = time.perf_counter()
         g = self.by_uid[uid]

@@ -1,9 +1,11 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Plus, Plane } from "lucide-react";
 import AppShell from "@/components/shell/AppShell";
 import KpiTile from "@/components/fleet/KpiTile";
 import TierBadge from "@/components/fleet/TierBadge";
+import AddEngineModal from "@/components/fleet/AddEngineModal";
 import { faultLabel, getJSON, usd, type AuditRow, type FleetRow } from "@/lib/api";
 
 export default function FleetPage() {
@@ -11,13 +13,23 @@ export default function FleetPage() {
   const [rows, setRows] = useState<FleetRow[] | null>(null);
   const [err, setErr] = useState("");
   const [recent, setRecent] = useState<AuditRow[]>([]);
+  const [isAddOpen, setIsAddOpen] = useState(false);
+
+  const loadFleet = useCallback(() => {
+    setErr("");
+    getJSON<FleetRow[]>(`/decision/triage-queue?frac=${frac}`)
+      .then(setRows)
+      .catch((e) => setErr(String(e.message ?? e)));
+  }, [frac]);
 
   useEffect(() => {
-    setErr("");
-    const id = setTimeout(() => getJSON<FleetRow[]>(`/decision/triage-queue?frac=${frac}`).then(setRows).catch((e) => setErr(String(e.message ?? e))), 120);
+    const id = setTimeout(loadFleet, 120);
     return () => clearTimeout(id);
-  }, [frac]);
-  useEffect(() => { getJSON<AuditRow[]>("/audit?limit=5").then(setRecent).catch(() => undefined); }, []);
+  }, [loadFleet]);
+
+  useEffect(() => {
+    getJSON<AuditRow[]>("/audit?limit=5").then(setRecent).catch(() => undefined);
+  }, []);
 
   const k = useMemo(() => {
     if (!rows || !rows.length) return null;
@@ -35,8 +47,22 @@ export default function FleetPage() {
 
   return (
     <AppShell>
-      <h1 className="text-2xl font-semibold tracking-tight">Fleet board</h1>
-      <p className="mt-1 text-sm text-fg-2">Engines ranked by urgency at the selected point in their life (replayed N-CMAPSS test engines).</p>
+      {/* Top Header with Commission Engine Action */}
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-fg">Fleet board</h1>
+          <p className="mt-1 text-sm text-fg-2">
+            Engines ranked by urgency at the selected point in their life (replayed N-CMAPSS test engines).
+          </p>
+        </div>
+        <button
+          onClick={() => setIsAddOpen(true)}
+          className="inline-flex items-center gap-1.5 rounded-control bg-brand px-3.5 py-2 text-xs font-semibold text-brand-on hover:bg-brand-hover shadow-sm transition-colors"
+        >
+          <Plus className="h-4 w-4" />
+          <span>Commission Engine</span>
+        </button>
+      </div>
 
       <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {k ? (
@@ -58,7 +84,14 @@ export default function FleetPage() {
 
       <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_320px]">
         <section aria-label="Priority maintenance queue" className="rounded-card border border-line bg-surface shadow-card">
-          <div className="border-b border-line px-4 py-3 text-sm font-semibold">Priority maintenance queue</div>
+          <div className="flex items-center justify-between border-b border-line px-4 py-3">
+            <span className="text-sm font-semibold text-fg">Priority maintenance queue</span>
+            {rows && (
+              <span className="text-xs font-mono text-fg-3">
+                {rows.length} airframes monitored
+              </span>
+            )}
+          </div>
           {err ? (
             <div className="p-4 text-sm text-crit">Could not reach the API: {err}. Is the backend running at the configured URL?</div>
           ) : !rows ? (
@@ -68,7 +101,7 @@ export default function FleetPage() {
               <div key="skel-2" className="h-14 animate-pulse rounded bg-elevated" />
             </div>
           ) : rows.length === 0 ? (
-            <div className="p-4 text-sm text-fg-2">No engines loaded. Run <code className="num">python -m scripts.export_serving</code> first.</div>
+            <div className="p-4 text-sm text-fg-2">No engines loaded. Click &quot;Commission Engine&quot; to add engines to the fleet.</div>
           ) : (
             <ul>
               {rows.map((r) => (
@@ -111,6 +144,14 @@ export default function FleetPage() {
           </div>
         </aside>
       </div>
+
+      {/* Commission Engine Modal */}
+      <AddEngineModal
+        isOpen={isAddOpen}
+        onClose={() => setIsAddOpen(false)}
+        onEngineAdded={loadFleet}
+        currentFleetUids={rows ? rows.map((r) => r.engine_id) : []}
+      />
     </AppShell>
   );
 }
