@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import AppShell from "@/components/shell/AppShell";
 import StationChips from "@/components/engine/StationChips";
+import StationTelemetryInspector from "@/components/engine/StationTelemetryInspector";
 import { PRESETS, scaleRisk } from "@/lib/risk";
 import { stationLabel, type Station } from "@/lib/stations";
 import { getJSON } from "@/lib/api";
@@ -351,6 +352,16 @@ export default function ModelsAndTwinPage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* SECTION 1.5: PHYSICAL SENSOR TELEMETRY & THERMODYNAMIC INSPECTOR */}
+      <section className="mt-8">
+        <StationTelemetryInspector
+          selectedStation={selected}
+          onSelectStation={(s) => setSelected(s)}
+          riskScore={selected ? (risk[selected] ?? 0) : 0.75}
+          degradationLevel={level}
+        />
       </section>
 
       {/* SECTION 2: AI MODEL GOVERNANCE & BENCHMARK SUITE */}
