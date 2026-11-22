@@ -19,6 +19,7 @@ export interface FleetRow {
 }
 export interface AuditRow {
   id: number; ts: string; engine_id: string; cycle: number; action: string; engineer_license: string; justification: string; entry_hash: string; prev_hash: string;
+  snapshot?: string | Record<string, any>;
 }
 export interface Chain { valid: boolean; broken_at_id: number | null }
 

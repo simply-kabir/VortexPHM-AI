@@ -88,7 +88,7 @@ def decide(body: DecisionIn, s: Session = Depends(get_db)):
 def audit(limit: int = 100, s: Session = Depends(get_db)):
     rows = s.scalars(select(db.AuditLog).order_by(db.AuditLog.id.desc()).limit(limit)).all()
     return [dict(id=r.id, ts=r.ts, engine_id=r.engine_id, cycle=r.cycle, action=r.action, engineer_license=r.engineer_license,
-                 justification=r.justification, entry_hash=r.entry_hash, prev_hash=r.prev_hash) for r in rows]
+                 justification=r.justification, entry_hash=r.entry_hash, prev_hash=r.prev_hash, snapshot=r.snapshot) for r in rows]
 
 
 @api.get("/audit/verify")
