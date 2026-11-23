@@ -43,7 +43,37 @@ event.listen(AuditLog.__table__, "after_create", DDL(
 ).execute_if(dialect="postgresql"))
 
 
-def init_db(): Base.metadata.create_all(engine)
+DEFAULT_SEEDS = [
+    ("DS01-005-t-u7", 72, "ACCEPT", "FAA-A&P-389104", "Confirmed HPT thermal distress signature. Thermocouple T48 shows +38K delta above normal regime. Scheduled boroscope inspection under AMM 72-00-00.",
+     {"fault_class": "FAULT_HPT_THERMAL", "urgency": {"tier": 1, "index": 0.88}, "rul": 14.2, "anomaly_score": 0.912}),
+    ("DS02-006-t-u2", 45, "OVERRIDE", "EASA-66-B1-94812", "Overrode urgent ground order to defer. Sensor drift isolated to transducer P25 harness grounding after pre-flight continuity test. Recalibrated harness; released under ETOPS MEL.",
+     {"fault_class": "FAULT_SENSOR_DRIFT", "urgency": {"tier": 2, "index": 0.64}, "rul": 58.0, "anomaly_score": 0.684}),
+    ("DS01-005-t-u3", 89, "ACCEPT", "DGCA-AME-50219", "Endorsed AI decision to ground engine immediately. High vibrational frequency and low RUL indicate severe LPT blade tip rubbing. Aircraft pulled from rotation.",
+     {"fault_class": "FAULT_LPT", "urgency": {"tier": 1, "index": 0.95}, "rul": 6.8, "anomaly_score": 0.978}),
+    ("DS02-006-t-u5", 28, "DEFER", "FAA-A&P-441209", "Minor core pressure divergence within allowable standard deviation. Cleared for scheduled 3-leg daily domestic operation with automated telemetry watch.",
+     {"fault_class": "NOMINAL", "urgency": {"tier": 3, "index": 0.22}, "rul": 134.5, "anomaly_score": 0.281}),
+    ("DS01-005-t-u1", 62, "ACCEPT", "EASA-66-B1-88123", "HPT thermal degradation confirmed by borescope port 3 analysis. Accelerated shop visit dispatched to overhaul facility.",
+     {"fault_class": "FAULT_HPT_THERMAL", "urgency": {"tier": 1, "index": 0.81}, "rul": 22.1, "anomaly_score": 0.845}),
+    ("DS02-006-t-u14", 52, "ACCEPT", "FAA-A&P-591024", "Low pressure turbine shroud seal degradation confirmed by exhaust gas temperature trend. Maintenance action initiated per AMM 72-51-00.",
+     {"fault_class": "FAULT_LPT", "urgency": {"tier": 2, "index": 0.72}, "rul": 28.5, "anomaly_score": 0.765}),
+    ("DS01-005-t-u8", 65, "OVERRIDE", "EASA-66-B1-71049", "Overrode Tier 1 ground recommendation. Transient EGT spike occurred during maximum takeoff thrust in hot-and-high conditions. Subsequent cruise telemetry stabilized at nominal levels.",
+     {"fault_class": "FAULT_HPT_THERMAL", "urgency": {"tier": 1, "index": 0.84}, "rul": 18.0, "anomaly_score": 0.862}),
+    ("DS02-006-t-u11", 35, "DEFER", "DGCA-AME-61092", "Slight core spool oscillation within acceptable threshold limits. Cleared for 25 additional flight cycles under automated health monitoring.",
+     {"fault_class": "NOMINAL", "urgency": {"tier": 3, "index": 0.29}, "rul": 112.0, "anomaly_score": 0.310})
+]
+
+
+def seed_if_empty():
+    with SessionLocal() as s:
+        count = s.scalar(select(AuditLog).limit(1))
+        if count is None:
+            for e in DEFAULT_SEEDS:
+                append_entry(s, e[0], e[1], e[2], e[3], e[4], e[5])
+
+
+def init_db():
+    Base.metadata.create_all(engine)
+    seed_if_empty()
 def canonical(d) -> str: return json.dumps(d, sort_keys=True, separators=(",", ":"))
 def compute_hash(prev: str, payload: dict) -> str: return hashlib.sha256((prev + "|" + canonical(payload)).encode()).hexdigest()
 
