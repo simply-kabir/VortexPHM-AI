@@ -1,16 +1,15 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   ShieldAlert,
   ShieldCheck,
   Plane,
-  AlertTriangle,
-  Clock,
-  CheckCircle2,
-  TrendingDown,
-  DollarSign,
   Activity,
+  ChevronDown,
+  ChevronUp,
+  DollarSign,
+  Info,
 } from "lucide-react";
 import { usd, type FleetRow } from "@/lib/api";
 
@@ -19,6 +18,7 @@ interface Props {
   loading?: boolean;
   activeTier: number | null;
   onSelectTier: (tier: number | null) => void;
+  viewMode?: "executive" | "detailed";
 }
 
 export default function FlightLineRibbon({
@@ -26,7 +26,10 @@ export default function FlightLineRibbon({
   loading,
   activeTier,
   onSelectTier,
+  viewMode = "executive",
 }: Props) {
+  const [showEconomicsDrawer, setShowEconomicsDrawer] = useState(false);
+
   const stats = useMemo(() => {
     if (!rows || rows.length === 0) {
       return {
@@ -73,15 +76,16 @@ export default function FlightLineRibbon({
   }
 
   const hasAog = stats.t1 > 0;
+  const isEconomicsVisible = viewMode === "detailed" || showEconomicsDrawer;
 
   return (
-    <div className="mt-5 rounded-card border border-line bg-surface p-4 shadow-card space-y-4">
-      {/* Top Banner: Airworthiness Dispatch Status & Financial Risk Mitigation */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line/70 pb-3.5">
+    <div className="mt-5 rounded-card border border-line bg-surface p-4 shadow-card space-y-3.5 transition-all">
+      {/* Top Banner: Airworthiness Dispatch Status & Compact Economics Trigger */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line/70 pb-3">
         {/* Left: Operations Center Readiness */}
         <div className="flex items-center gap-3">
           <div
-            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border ${
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition-colors ${
               hasAog
                 ? "border-crit/40 bg-crit-fill/15 text-crit"
                 : "border-ok/40 bg-ok-fill/15 text-ok"
@@ -122,47 +126,80 @@ export default function FlightLineRibbon({
           </div>
         </div>
 
-        {/* Right: Inline Maintenance Economics Readout */}
-        <div className="flex flex-wrap items-center gap-4 text-xs">
-          <div className="rounded border border-line/60 bg-elevated/40 px-3 py-1.5">
-            <span className="block text-[10px] uppercase tracking-wider text-fg-3">
-              Avoidable Failure Risk
-            </span>
-            <span className="font-mono text-xs font-semibold text-fg">
-              {usd(stats.riskCost)}
-            </span>
-          </div>
-
-          <div className="rounded border border-line/60 bg-elevated/40 px-3 py-1.5">
-            <span className="block text-[10px] uppercase tracking-wider text-fg-3">
-              Preventative Action
-            </span>
-            <span className="font-mono text-xs font-semibold text-fg">
-              {usd(stats.preventCost)}
-            </span>
-          </div>
-
-          <div className="rounded border border-ok/30 bg-ok-fill/10 px-3 py-1.5 text-ok">
-            <span className="block text-[10px] uppercase tracking-wider font-semibold">
-              Net Avoided Loss
-            </span>
-            <span className="font-mono text-xs font-bold">
-              +{usd(stats.netSavings)}
-            </span>
-          </div>
+        {/* Right: Inline Economics pill or trigger */}
+        <div className="flex items-center gap-2">
+          {viewMode === "executive" ? (
+            <button
+              onClick={() => setShowEconomicsDrawer((v) => !v)}
+              className="inline-flex items-center gap-1.5 rounded-chip border border-ok/30 bg-ok-fill/10 px-3 py-1.5 text-xs text-ok hover:bg-ok-fill/20 transition-colors font-medium shadow-sm"
+              title="Click to expand maintenance financial exposure analysis"
+            >
+              <DollarSign className="h-3.5 w-3.5" />
+              <span>Net Avoided Loss: <strong>+{usd(stats.netSavings)}</strong></span>
+              {showEconomicsDrawer ? (
+                <ChevronUp className="h-3 w-3 ml-0.5" />
+              ) : (
+                <ChevronDown className="h-3 w-3 ml-0.5" />
+              )}
+            </button>
+          ) : (
+            <div className="flex items-center gap-1 text-[11px] font-mono text-fg-3">
+              <Info className="h-3.5 w-3.5 text-brand" />
+              <span>UER Cost Model Active</span>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Collapsible Maintenance Economics Strip (Progressive Disclosure) */}
+      {isEconomicsVisible && (
+        <div className="rounded-control border border-line/60 bg-elevated/40 p-3 text-xs animate-in fade-in duration-200">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="rounded bg-surface border border-line px-2.5 py-1">
+                <span className="block text-[10px] uppercase tracking-wider text-fg-3">
+                  Avoidable Failure Risk
+                </span>
+                <span className="font-mono text-xs font-semibold text-fg">
+                  {usd(stats.riskCost)}
+                </span>
+              </div>
+
+              <div className="rounded bg-surface border border-line px-2.5 py-1">
+                <span className="block text-[10px] uppercase tracking-wider text-fg-3">
+                  Preventative Action
+                </span>
+                <span className="font-mono text-xs font-semibold text-fg">
+                  {usd(stats.preventCost)}
+                </span>
+              </div>
+
+              <div className="rounded border border-ok/30 bg-ok-fill/10 px-2.5 py-1 text-ok">
+                <span className="block text-[10px] uppercase tracking-wider font-semibold">
+                  Net Avoided Loss
+                </span>
+                <span className="font-mono text-xs font-bold">
+                  +{usd(stats.netSavings)}
+                </span>
+              </div>
+            </div>
+
+            <p className="text-[11px] text-fg-3 max-w-sm">
+              Expected cost avoidance modeled under FAA AC 120-78A: Σ P(fail within horizon) × $2.5M Unscheduled Engine Removal cost vs immediate boroscopy.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Bottom Control Bar: Interactive Triage Flight-Line Segments */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2 text-xs text-fg-3 font-medium">
           <Activity className="h-3.5 w-3.5 text-brand" />
-          <span>Flight-Line Triage Filter:</span>
+          <span>Flight-Line Triage:</span>
         </div>
 
         {/* Filter Segment Buttons */}
         <div className="flex flex-wrap gap-1.5" role="group" aria-label="Filter queue by operational tier">
-          {/* ALL */}
           <button
             onClick={() => onSelectTier(null)}
             aria-pressed={activeTier === null}
@@ -176,7 +213,6 @@ export default function FlightLineRibbon({
             <span>All Airframes ({stats.total})</span>
           </button>
 
-          {/* Tier 1 (Critical AOG) */}
           <button
             onClick={() => onSelectTier(activeTier === 1 ? null : 1)}
             aria-pressed={activeTier === 1}
@@ -187,10 +223,9 @@ export default function FlightLineRibbon({
             }`}
           >
             <span className="h-2 w-2 rounded-full bg-crit-fill" />
-            <span>Tier 1: Ground Hold / AOG ({stats.t1})</span>
+            <span>Tier 1: Ground Hold ({stats.t1})</span>
           </button>
 
-          {/* Tier 2 (Warning MEL) */}
           <button
             onClick={() => onSelectTier(activeTier === 2 ? null : 2)}
             aria-pressed={activeTier === 2}
@@ -201,10 +236,9 @@ export default function FlightLineRibbon({
             }`}
           >
             <span className="h-2 w-2 rounded-full bg-warn-fill" />
-            <span>Tier 2: Turnaround Watch ({stats.t2})</span>
+            <span>Tier 2: Watchlist ({stats.t2})</span>
           </button>
 
-          {/* Tier 3 (Nominal) */}
           <button
             onClick={() => onSelectTier(activeTier === 3 ? null : 3)}
             aria-pressed={activeTier === 3}
@@ -215,7 +249,7 @@ export default function FlightLineRibbon({
             }`}
           >
             <span className="h-2 w-2 rounded-full bg-ok-fill" />
-            <span>Tier 3: Nominal Flight ({stats.t3})</span>
+            <span>Tier 3: Nominal ({stats.t3})</span>
           </button>
         </div>
       </div>
